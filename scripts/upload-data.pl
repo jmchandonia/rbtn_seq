@@ -60,7 +60,7 @@ my $genome = $serv->get_object({
     workspace => $workspace
     #instance => $jobdata->{TranscriptSet_inst},
     #auth => $job->{auth}
-			       });
+});
 #foreach(@{$genome->{metadata}}){
 #    print "$_\n";
 #}
@@ -78,7 +78,6 @@ for(my $i=0; $i< scalar(@{$genome->{data}->{features}}); ++$i){
     my $f = $genome->{data}->{features}->[$i];
 
     if($f->{type} eq "CDS"){
-	
 	#print "F ".$f->{id}." type : ".$f->{type}."\n"; 
 	my @aliases = @{$f->{aliases}};
 	foreach(@aliases){
@@ -268,9 +267,6 @@ foreach (@meta){
 #we don't create these objects in ws anymore, too many
 #createObjectsForMissingRefs($serv, $workspace, \%Barseq2objref);
 
-
-
-
 ####################################################
 #create BarSeqExperimentResults
 #
@@ -312,7 +308,6 @@ foreach (@meta){
 # my %BarseqRes2objref = ();
 # $BarseqRes2objref{ $name } = $params;
 # createObjectsForMissingRefs($serv, $workspace, \%BarseqRes2objref);
-
 
 
 
@@ -379,16 +374,18 @@ while(<FILE>){
     
     my ($locusId, $sysName, $desc, $comb, @lratios) = @l;
 
-    print STDERR "Error: $sysName not found in genome $genome_name. Skipping this gene.\n"
-	if !exists $Aliases2FeatID{ $sysName };
+    if( !exists $FeatID2index{ $sysName } ){
+	if( exists $Aliases2FeatID{ $sysName } ){
+		$sysName = $Aliases2FeatID{ $sysName };
+	}else{
+	    print STDERR "Error: $sysName not found in genome $genome_name. Skipping this gene.\n";
+	    die "Error: $sysName not found in genome $genome_name\n";
+	}
+    }
+    die "Error: with index: for $sysName not found in genome $genome_name\n"
+        if !exists $FeatID2index{ $sysName };
 
-    next if !exists $Aliases2FeatID{ $sysName }; #!!!!!
-    die "Error: $sysName not found in genome $genome_name\n"
-        if !exists $Aliases2FeatID{ $sysName };
-     die "Error: alias ".$Aliases2FeatID{ $sysName }."for $sysName not found in genome $genome_name\n"
-        if !exists $FeatID2index{ $Aliases2FeatID{ $sysName } };
-
-    my $feat_index=int($FeatID2index{ $Aliases2FeatID{ $sysName } });
+    my $feat_index=int($FeatID2index{ $sysName });
 
     ++$gcounter;
     for(my $i=0; $i<= $#lratios; ++$i){
@@ -401,8 +398,8 @@ while(<FILE>){
     }
 
     push @{$matrix2D->{ "values" }}, [ @lratios ];
-    push @{$matrix2D->{ "row_ids" }}, $Aliases2FeatID{ $sysName };
-    $row_to_index->{ $Aliases2FeatID{ $sysName } } = $feat_index;
+    push @{$matrix2D->{ "row_ids" }}, $sysName ;
+    $row_to_index->{ $sysName } = $feat_index;
 }
 close FILE;
 print "Saving data for $gcounter genes\n";

@@ -1,8 +1,28 @@
 # rbtn_seq
 
+###################################################
 #register BarSeqExperimentResults with workspace
+###################################################
+
 ws-typespec-register -u mshatsky  -t KBaseRBTnSeq.spec --add "BarSeqExperimentResults" --commit
 ws-typespec-register -u mshatsky  -release KBaseRBTnSeq
+
+###################################################
+#upload data using a script
+###################################################
+
+#from 'scripts' dir:
+#should be logged in to kbase to execute the script
+#params:
+#file_with_meta_data file_with_logratios <-w workspace> <-n object_name> <-g genome_name>
+#log ratios: RCH2_fit_logratios_good.tab.txt
+#meta data: expsUsed.txt 
+#-w WS id
+#-g genome name, should be present in a given WS (e.g. ps_rch2_v3)
+#-n name of the new object (e.g. rbRCH2)
+#working example:
+./run_in_kb_env ./upload-data.pl ../test/data/expsUsed.txt ../test/data/RCH2_fit_logratios_good.tab.txt -w mshatsky:1439854430561 -g ps_rch2_v3 -n rbRCH2
+
 
 
 Widgets:
