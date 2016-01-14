@@ -124,12 +124,9 @@ typedef string pool_ref;
 /*
   A Pool is a collection of barcoded strains.  Barcodes, tags, etc should
   be stored as Deltas in each strain.
-@optional comments
 */
 typedef structure {
-    string name;
-    string comments;
-    list<Strain> strains;
+    list<tuple<Strain strain, int count>> strains;
 } Pool;
 
 /*
@@ -187,57 +184,13 @@ typedef structure {
 */
 typedef string growth_parameters_ref;
 
-
-/*
-  Number of strains determined from sequencing of TnSeq library.
-  strain_index - index of a strain in Pool.strains list
-  count - number of instances of the strain identified from sequencing
-*/
-typedef tuple<int strain_index,int count> tnseq_result;
-
-/*
-  A TnSeqExperiment is an experiment in which a pool of mutants is created 
-  by a transposone mutagenesis.
-  It stores the results of sequencing of a TnSeq experiment, i.e. 
-  number of times each mutant strain is detected by sequencing.
-*/
-typedef structure {
-    string name;
-    pool_ref pool;
-    string start_date;
-    string sequenced_at;
-    GrowthParameters growth_parameters;
-    list<tnseq_result> results;
-} TnSeqExperiment;
-
-/*
-@id ws KBaseRBTnSeq.TnSeqExperiment
-*/
-typedef string tnseq_experiment_ref;
-
-/*
-  TnSeqLibrary is a filtered subset of strains from TnSeqExperiment that is 
-  suitable for the subsequent analysis of BarSeq experiments.
-  list<int tnseq_results_index> selected_lib - index to TnSeqExperiment.results
-*/
-typedef structure {
-    tnseq_experiment_ref experiment;
-    list<int> selected_lib;
-} TnSeqLibrary;
-
-/*
-@id ws KBaseRBTnSeq.TnSeqLibrary
-*/
-typedef string tnseq_library_ref;
-
-
 /*
   A BarSeqExperiment is an experiment in which a pool is grown in
   several parallel aliquots (e.g., wells or tubes), each potentially
   treated with a different set of conditions (but usually it is just one
   Condition)
   BarSeqExperiment object represents only one such condition
-@optional person mutant_lib_name tnseq_library
+@optional person mutant_lib_name tnseq_pool
 */
 typedef structure {
     string name;
@@ -247,7 +200,7 @@ typedef structure {
     string sequenced_at;
     GrowthParameters growth_parameters;
     list<Condition> conditions; /* usually one or two conditions */
-    tnseq_library_ref tnseq_library;
+    pool_ref tnseq_pool;
 } BarSeqExperiment;
 
 /*
@@ -309,10 +262,10 @@ typedef string barseq_experiment_results_ref;
 
 /*
   Computes essential genes from a TnSeq pool
-  Input: tnseq_library_ref - reference to a TnSeqLibrary
+  Input: pool_ref - reference to a Pool
   Output: list of genes 
 */
-funcdef essential_genes(tnseq_library_ref) returns (list<feature_ref>) authentication required;
+funcdef essential_genes(pool_ref) returns (list<feature_ref>) authentication required;
 
 /*
   Computes essential genes from a BarSeq experiment
@@ -326,7 +279,7 @@ funcdef essential_genes(barseq_experiment_results_ref) returns (list<feature_ref
   Input: tnseq_library_ref - reference to a TnSeqLibrary
   Output: list of genes with their fitness
 */
-funcdef gene_fitness(tnseq_library_ref) returns (list<tuple<feature_ref gene, float fitness>>) authentication required;
+funcdef gene_fitness(pool_ref) returns (list<tuple<feature_ref gene, float fitness>>) authentication required;
 
 /*
   Computes gene fitness from a BarSeq experiment

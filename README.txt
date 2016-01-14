@@ -1,11 +1,11 @@
 # rbtn_seq
 
 ###################################################
-#register BarSeqExperimentResults with workspace
+#register new types with workspace
 ###################################################
 
-ws-typespec-register -u mshatsky  -t KBaseRBTnSeq.spec --add "BarSeqExperimentResults" --commit
-ws-typespec-register -u mshatsky  -release KBaseRBTnSeq
+ws-typespec-register -u jmc -t KBaseRBTnSeq.spec --add "Strain;Delta;Pool;MappedReads" --commit
+ws-typespec-register -u jmc -release KBaseRBTnSeq
 
 ###################################################
 #upload data using a script
