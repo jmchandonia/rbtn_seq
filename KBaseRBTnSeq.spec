@@ -20,6 +20,32 @@ typedef string genome_ref;
 typedef string contig_ref;
 
 /*
+@id ws KBaseAssembly.SingleEndLibrary
+*/
+typedef string reads_ref;
+
+/*
+TnSeq barcode model, showing how the barcodes / transposon
+were designed
+*/
+typedef tuple <string read_template, string flanking_sequence> tnseq_model;
+
+/*
+A single TnSeq mapped read
+*/
+typedef tuple <string read_name, string barcode, contig_ref scaffold, int insert_pos, string strand, bool is_unique, int hit_start, int hit_end, float bit_score, float pct_identity> mapped_read;
+
+/*
+A MappedReads object stores the mapping of reads to a genome
+*/
+typedef structure {
+    genome_ref genome;
+    reads_ref reads;
+    tnseq_model model;
+    list<mapped_read> mapped_reads;
+} MappedReads;
+
+/*
 @id ws KBaseCommunities.Sample
 */
 typedef string sample_ref;
@@ -113,7 +139,7 @@ typedef structure {
 typedef string compound_ref;
     
 /*
-  A Condition is something that's added to particular aliquots in
+  A Condition is something that is added to particular aliquots in
   a growth experiment, in addition to the media.  e.g., it may be a stress
   condition, or a nutrient.  Compound is needed if the condition is
   addition of a chemical in the KBase Biochemistry database.
@@ -188,7 +214,6 @@ typedef structure {
 @id ws KBaseRBTnSeq.TnSeqExperiment
 */
 typedef string tnseq_experiment_ref;
-
 
 /*
   TnSeqLibrary is a filtered subset of strains from TnSeqExperiment that is 
