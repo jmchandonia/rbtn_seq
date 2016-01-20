@@ -46,6 +46,11 @@ typedef structure {
 } MappedReads;
 
 /*
+@id ws KBaseRBTnSeq.MappedReads
+*/
+typedef string mapped_reads_ref;
+
+/*
 @id ws KBaseCommunities.Sample
 */
 typedef string sample_ref;
@@ -126,6 +131,7 @@ typedef string pool_ref;
   be stored as Deltas in each strain.
 */
 typedef structure {
+    mapped_reads_ref mapped_reads;
     list<tuple<Strain strain, int count>> strains;
 } Pool;
 
@@ -134,7 +140,7 @@ typedef structure {
  @id subws KBaseBiochem.Biochemistry.compounds.[*].id
 */
 typedef string compound_ref;
-    
+
 /*
   A Condition is something that is added to particular aliquots in
   a growth experiment, in addition to the media.  e.g., it may be a stress
@@ -289,3 +295,5 @@ funcdef gene_fitness(pool_ref) returns (list<tuple<feature_ref gene, float fitne
 funcdef gene_fitness(barseq_experiment_results_ref) returns (list<tuple<feature_ref gene, float fitness>>) authentication required;
 
 };
+
+
