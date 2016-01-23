@@ -31,9 +31,10 @@ were designed
 typedef tuple <string read_template, string flanking_sequence> tnseq_model;
 
 /*
-A single TnSeq mapped read
+A single TnSeq mapped read.  Scaffold index is a 0-indexed list of
+contigs referred to by the genome.
 */
-typedef tuple <string read_name, string barcode, contig_ref scaffold, int insert_pos, string strand, bool is_unique, int hit_start, int hit_end, float bit_score, float pct_identity> mapped_read;
+typedef tuple <string read_name, string barcode, int contig_index, int insert_pos, string strand, bool is_unique, int hit_start, int hit_end, float bit_score, float pct_identity> mapped_read;
 
 /*
 A MappedReads object stores the mapping of reads to a genome
@@ -51,18 +52,13 @@ typedef structure {
 typedef string mapped_reads_ref;
 
 /*
-@id ws KBaseCommunities.Sample
-*/
-typedef string sample_ref;
-
-/*
 @id ws KBaseBiochem.Media
 */
 typedef string media_ref;
 
 /*
-	Reference to a Feature object of a genome in the workspace
-	@id subws KBaseGenomes.Genome.features.[*].id
+Reference to a Feature object of a genome in the workspace
+@id subws KBaseGenomes.Genome.features.[*].id
 */
 typedef string feature_ref;
 
@@ -82,13 +78,13 @@ typedef string change_type;
   position and length.  The position of all Deltas should be
   calculated relative to the parent strain (derived_from_strain), so
   that the Deltas could be applied in any order.
-@optional change feature contig sequence position length
+@optional change feature contig_index sequence position length
 */
 typedef structure {
     string description;
     change_type change;
     feature_ref feature;
-    contig_ref contig;
+    int contig_index;
     string sequence;
     int position;
     int length;
@@ -104,13 +100,13 @@ typedef string strain_ref;
   it may be:
     * derived from another Strain (e.g., as an engineered mutant)
     * sequenced
-    * isolated from a community
     * a wild-type example of a Genome
   If a strain is "wild type" it should have a non-null genome_ref and a
-  null derived_from_strain.  If not wild type, genome_ref should be
-  set to the "original" parent strain in KBase, if it exists, or null
-  if it does not exist or is unknown.
-@optional description genome derived_from_strain deltas isolated_from
+  null derived_from_strain.  If not wild type (or otherwise not
+  characterized), genome_ref should be set to null.  (If genome_ref
+  were not null, a large pool of mutant strains would have too many references
+  to the genome in our current data model.)
+@optional description genome derived_from_strain deltas
 */
 typedef structure {
     string name;
@@ -118,7 +114,6 @@ typedef structure {
     genome_ref genome;
     strain_ref derived_from_strain;
     list<Delta> deltas;
-    sample_ref isolated_from;
 } Strain;
 
 /*

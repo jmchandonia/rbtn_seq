@@ -4,7 +4,8 @@
 #register new types with workspace
 ###################################################
 
-ws-typespec-register -u jmc -t KBaseRBTnSeq.spec --add "Strain;Delta;Pool;MappedReads" --commit
+ws-typespec-register -u jmc -t KBaseRBTnSeq.spec --commit
+# if adding new objects, add an arg like --add "Strain;Delta;Pool;MappedReads"
 ws-typespec-register -u jmc -release KBaseRBTnSeq
 
 ###################################################
