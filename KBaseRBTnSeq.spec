@@ -31,19 +31,21 @@ were designed
 typedef tuple <string read_template, string flanking_sequence> tnseq_model;
 
 /*
-A single TnSeq mapped read.  Scaffold index is a 0-indexed list of
-contigs referred to by the genome.
+A single TnSeq mapped read.  If hit_start < hit_end, read
+is on + strand; otherwise, read is on - strand
 */
-typedef tuple <string read_name, string barcode, int contig_index, int insert_pos, string strand, bool is_unique, int hit_start, int hit_end, float bit_score, float pct_identity> mapped_read;
+typedef tuple <string read_name, string barcode, int insert_pos, int hit_start, int hit_end, float bit_score, float pct_identity> mapped_read;
 
 /*
-A MappedReads object stores the mapping of reads to a genome
+A MappedReads object stores the mapping of reads to a genome.
+Scaffold index is a 0-indexed list of contigs referred to by the genome.
 */
 typedef structure {
     genome_ref genome;
     reads_ref reads;
     tnseq_model model;
-    list<mapped_read> mapped_reads;
+    list<tuple<int contig_index,list<mapped_read>>> unique_reads;
+    list<tuple<int contig_index,list<mapped_read>>> nonunique_reads;
 } MappedReads;
 
 /*
