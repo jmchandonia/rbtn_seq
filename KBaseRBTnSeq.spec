@@ -38,14 +38,16 @@ typedef tuple <string read_name, string barcode, int insert_pos, int hit_start, 
 
 /*
 A MappedReads object stores the mapping of reads to a genome.
-Scaffold index is a 0-indexed list of contigs referred to by the genome.
+Unique and non-unique reads are stored in arrays indexed using
+the contig index.  The last set of reads in each of these arrays
+corresponds to "past end" reads.
 */
 typedef structure {
     genome_ref genome;
     reads_ref reads;
     tnseq_model model;
-    list<tuple<int contig_index,list<mapped_read>>> unique_reads;
-    list<tuple<int contig_index,list<mapped_read>>> nonunique_reads;
+    list<list<mapped_read>> unique_reads_by_contig;
+    list<list<mapped_read>> nonunique_reads_by_contig;
 } MappedReads;
 
 /*
