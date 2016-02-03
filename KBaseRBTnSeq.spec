@@ -31,10 +31,9 @@ were designed
 typedef tuple <string read_template, string flanking_sequence> tnseq_model;
 
 /*
-A single TnSeq mapped read.  If hit_start < hit_end, read
-is on + strand; otherwise, read is on - strand
+A single TnSeq mapped read.
 */
-typedef tuple <string barcode, int insert_pos, int hit_start, int hit_end> mapped_read;
+typedef tuple <string barcode, int insert_pos> mapped_read;
 
 /*
 A MappedReads object stores the mapping of reads to a genome.
