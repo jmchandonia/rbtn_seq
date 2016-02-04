@@ -1,4 +1,5 @@
 #include <KBaseFeatureValues.spec>
+#include <KBaseFile.spec>
 
 /*
 This module is for storing microbial growth phenotype data, e.g., from
@@ -31,13 +32,8 @@ were designed
 typedef tuple <string read_template, string flanking_sequence> tnseq_model;
 
 /*
-A single TnSeq mapped read.
-*/
-typedef tuple <string barcode, int insert_pos> mapped_read;
-
-/*
 A MappedReads object stores the mapping of reads to a genome.
-Unique and non-unique reads are stored in arrays indexed using
+Unique and non-unique read positions are stored in arrays indexed using
 the contig index.  The last set of reads in each of these arrays
 corresponds to "past end" reads.
 */
@@ -45,8 +41,9 @@ typedef structure {
     genome_ref genome;
     reads_ref reads;
     tnseq_model model;
-    list<list<mapped_read>> unique_reads_by_contig;
-    list<list<mapped_read>> nonunique_reads_by_contig;
+    KBaseFile.Handle mapped_reads_file;
+    list<list<int>> unique_insert_pos_by_contig;
+    list<list<int>> nonunique_insert_pos_by_contig;
 } MappedReads;
 
 /*
