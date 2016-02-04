@@ -1,5 +1,5 @@
 #include <KBaseFeatureValues.spec>
-#include <KBaseFile.spec>
+#include <KBaseAssembly.spec>
 
 /*
 This module is for storing microbial growth phenotype data, e.g., from
@@ -21,6 +21,7 @@ typedef string genome_ref;
 typedef string contig_ref;
 
 /*
+Replace with KBaseFile object?
 @id ws KBaseAssembly.SingleEndLibrary
 */
 typedef string reads_ref;
@@ -35,13 +36,14 @@ typedef tuple <string read_template, string flanking_sequence> tnseq_model;
 A MappedReads object stores the mapping of reads to a genome.
 Unique and non-unique read positions are stored in arrays indexed using
 the contig index.  The last set of reads in each of these arrays
-corresponds to "past end" reads.
+corresponds to "past end" reads.  Handle should be replaced by
+a KBaseFile.Handle, but this is not registered yet.
 */
 typedef structure {
     genome_ref genome;
     reads_ref reads;
     tnseq_model model;
-    KBaseFile.Handle mapped_reads_file;
+    KBaseAssembly.Handle mapped_reads_file;
     list<list<int>> unique_insert_pos_by_contig;
     list<list<int>> nonunique_insert_pos_by_contig;
 } MappedReads;
