@@ -126,10 +126,17 @@ typedef string pool_ref;
 /*
   A Pool is a collection of barcoded strains.  Barcodes, tags, etc should
   be stored as Deltas in each strain.
+@optional pool_hit_file pool_unhit_file pool_surprise_file
 */
 typedef structure {
+    genome_ref genome;
     mapped_reads_ref mapped_reads;
-    list<tuple<Strain strain, int count>> strains;
+    KBaseAssembly.Handle pool_file;
+    KBaseAssembly.Handle pool_hit_file;
+    KBaseAssembly.Handle pool_unhit_file;
+    KBaseAssembly.Handle pool_surprise_file;
+    list<Strain> strains;
+    list<int> counts;
 } Pool;
 
 /*
